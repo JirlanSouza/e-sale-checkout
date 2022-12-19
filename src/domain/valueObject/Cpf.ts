@@ -37,7 +37,7 @@ export class Cpf {
 
     private calculateDigit(cpf: string, factor: number) {
         let total = 0;
-        for (let value of cpf) {
+        for (const value of cpf) {
             if (factor > 1) {
                 total += parseInt(value) * factor--;
             }
