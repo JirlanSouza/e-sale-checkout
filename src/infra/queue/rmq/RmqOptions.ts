@@ -1,7 +1,7 @@
 import { Deserializer, Serializer } from "@nestjs/microservices";
 import { RmqUrl } from "@nestjs/microservices/external/rmq-url.interface";
 
-export interface RmqClientOptions {
+export interface RmqOptions {
     urls?: string[] | RmqUrl[];
     queue?: string;
     prefetchCount?: number;
