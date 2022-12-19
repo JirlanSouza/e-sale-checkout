@@ -12,7 +12,7 @@ export class OrderPreview {
 
     async execute(input: PreviewCheckoutInput): Promise<PreviewCheckoutOutput> {
         const order = new Order(input.cpf, 1, input.now);
-        let orderItems = [];
+        const orderItems = [];
 
         for (const inputItem of input.items) {
             const item = await this.getItemGatway.getItem(inputItem.idItem);
