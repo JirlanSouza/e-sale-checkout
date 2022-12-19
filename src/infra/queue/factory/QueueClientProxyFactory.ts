@@ -11,19 +11,20 @@ export class QueueClientProxyFactory {
                 name: QueueClientProxyFactory.placeOrderQueueClientProxy,
                 customClass: RmqClient,
                 options: {
-                    exchange: "checkout",
                     urls: ["amqp://localhost"],
                     queue: "placeOrder",
                 },
             },
             {
-                //transport: Transport.RMQ,
                 name: QueueClientProxyFactory.orderPlaceQueueClientProxy,
                 customClass: RmqClient,
                 options: {
-                    exchange: "checkout",
+                    exchange: {
+                        name: "checkout",
+                        type: "fanout",
+                        bindQueues: ["orderPlaced"],
+                    },
                     urls: ["amqp://localhost"],
-                    queue: "orderPlaced",
                 },
             },
         ]);
