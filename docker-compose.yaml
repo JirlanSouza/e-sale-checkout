@@ -1,0 +1,26 @@
+version: "3.2"
+services:
+    rabbitmq:
+        container_name: e-sale-rabbitmq
+        image: rabbitmq:3-management-alpine
+        ports:
+            - 15672:15672
+        expose:
+            - 15672
+
+    database:
+        container_name: e-sale-database
+        image: postgres:alpine
+        environment:
+            - POSTGRES_USER=${DATABASE_USER}
+            - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+            - POSTGRES_DB=${DATABASE}
+        volumes:
+            - e-sale-database:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
+        expose:
+            - 5432
+volumes:
+    e-sale-database:
+        driver: local
