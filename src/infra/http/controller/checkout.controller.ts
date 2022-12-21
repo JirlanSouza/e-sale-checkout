@@ -19,5 +19,9 @@ export class CheckoutController {
         );
 
         this.placeOrderQueue.publish(comand);
+        return {
+            message:
+                "order received successfully, await an update on your email",
+        };
     }
 }
