@@ -10,7 +10,7 @@ describe("OrderPreview", () => {
     let orderPreview: OrderPreview;
     let getItemGatway: GetItemGatway;
     let couponRepository: CouponRepository;
-    let calculatefreightGatway: CalculatefreightGatway = {
+    const calculatefreightGatway: CalculatefreightGatway = {
         calculate: async () => 0,
     };
     const items = [

@@ -5,8 +5,10 @@ services:
         image: rabbitmq:3-management-alpine
         ports:
             - 15672:15672
+            - 5672:5672
         expose:
             - 15672
+            - 5672
 
     database:
         container_name: e-sale-database
