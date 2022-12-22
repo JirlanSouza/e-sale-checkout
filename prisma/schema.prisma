@@ -11,8 +11,8 @@ model Order {
   id                String      @id
   code              String      @unique
   cpf               String
-  coupon_code       String
-  coupon_percentage Int
+  coupon_code       String?
+  coupon_percentage Int?
   issue_date        DateTime
   freight           Decimal
   sequence          Int
