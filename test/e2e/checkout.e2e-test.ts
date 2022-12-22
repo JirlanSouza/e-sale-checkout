@@ -17,7 +17,6 @@ describe("Checkout", () => {
 
     afterAll(async () => {
         await app.close();
-        console.log("close app");
     });
 
     test("POST /checkout: Should return the 201 status code with a success message", () => {
