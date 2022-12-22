@@ -5,7 +5,9 @@ import { PlaceOrderQueue } from "src/application/adapter/PlaceOrderQueue";
 import { GetItemGatway } from "src/application/gatway/GetItemGatway";
 import { Checkout } from "src/application/usecases/Chekout";
 import { RepositoryFactory } from "src/domain/factory/RepositoryFactory";
-import { InMemoryRepositoryFactory } from "../factory/InMemoryRepositoryFactory";
+import { DatabaseModule } from "../database/database.module";
+import { PrismaClient } from "../database/prisma/PrsimaClient";
+import { PrismaRepositoryFactory } from "../factory/PrismaRepositoryFactory";
 import { InMemorygetItemGatway } from "../gatway/InMemoryGetItemGatway";
 import { InMemoryOrderPlacedQueueAdapter } from "./adapter/InMemoryQueueAdapter";
 import { OrderPlacedRmqQueueAdapter } from "./adapter/OrderPlacedRmqQueueAdapter";
@@ -14,7 +16,7 @@ import { CheckoutQueueController } from "./controller/checkoutQueue.controller";
 import { QueueClientProxyFactory } from "./factory/QueueClientProxyFactory";
 
 @Module({
-    imports: [QueueClientProxyFactory.create()],
+    imports: [QueueClientProxyFactory.create(), DatabaseModule],
     controllers: [CheckoutQueueController],
     providers: [
         InMemoryOrderPlacedQueueAdapter,
@@ -32,7 +34,9 @@ import { QueueClientProxyFactory } from "./factory/QueueClientProxyFactory";
         },
         {
             provide: RepositoryFactory,
-            useClass: InMemoryRepositoryFactory,
+            inject: [PrismaClient],
+            useFactory: (prismaClient: PrismaClient) =>
+                new PrismaRepositoryFactory(prismaClient),
         },
         {
             provide: GetItemGatway,

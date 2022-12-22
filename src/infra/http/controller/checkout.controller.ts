@@ -1,7 +1,9 @@
-import { Body, Controller, Inject, Post } from "@nestjs/common";
+import { Body, Controller, HttpStatus, Inject, Post } from "@nestjs/common";
+import { ApiResponse } from "@nestjs/swagger";
 import { PlaceOrderQueue } from "src/application/adapter/PlaceOrderQueue";
 import { PlaceOrderComand } from "src/application/comands/placeOrder";
 import { PlaceOrderDto } from "../Dtos/placeOrder";
+import { PlaceOrderResultPresenter } from "../Presenter/PlaceOrderResult";
 
 @Controller("/checkout")
 export class CheckoutController {
@@ -11,6 +13,10 @@ export class CheckoutController {
     ) {}
 
     @Post()
+    @ApiResponse({
+        status: HttpStatus.CREATED,
+        type: PlaceOrderResultPresenter,
+    })
     async placeOrder(@Body() placeOrderData: PlaceOrderDto) {
         const comand = new PlaceOrderComand(
             placeOrderData.cpf,
@@ -18,10 +24,14 @@ export class CheckoutController {
             placeOrderData.coupon,
         );
 
-        this.placeOrderQueue.publish(comand);
-        return {
-            message:
-                "order received successfully, await an update on your email",
-        };
+        const result = await this.placeOrderQueue.publish(comand);
+
+        if (!result) {
+            throw new Error("Error to receive order");
+        }
+
+        return new PlaceOrderResultPresenter(
+            "order received successfully, await an update on your email",
+        );
     }
 }

@@ -47,13 +47,26 @@ export class RmqClient extends ClientRMQ {
 
     protected dispatchEvent(packet: ReadPacket): Promise<any> {
         const serializedPacket: ReadPacket & Partial<RmqRecord> =
-            this.serializer.serialize(packet.data);
-
+            this.serializer.serialize(packet);
         const options = serializedPacket.options;
         delete serializedPacket.options;
 
-        return new Promise<void>((resolve, reject) => {
-            const callback = (err: unknown) => (err ? reject(err) : resolve());
+        return new Promise<boolean>((resolve, reject) => {
+            const callback = (err: Error) => {
+                if (!err) {
+                    Logger.warn(
+                        `The event : ${packet.pattern} publish was refused, ${err?.message}`,
+                    );
+                    reject(false);
+                    return;
+                }
+                resolve(true);
+                Logger.log(
+                    `Publish the new event in topic: ${packet.pattern}`,
+                    RmqClient.name,
+                );
+            };
+
             if (this.options.exchange) {
                 this.publishToExchange(serializedPacket, options, callback);
             } else {
