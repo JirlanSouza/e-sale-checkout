@@ -6,10 +6,10 @@ import { randomUUID } from "crypto";
 import { Item } from "src/domain/entity/Item";
 import { Order } from "src/domain/entity/Order";
 import { OrderRepository } from "src/domain/repositoty/OrderRepository";
-import { PrismaClent } from "src/infra/database/prisma/PrsimaClient";
+import { PrismaClient } from "src/infra/database/prisma/PrsimaClient";
 
 export class PrismaOrderRepository implements OrderRepository {
-    constructor(private readonly prismaClient: PrismaClent) {}
+    constructor(private readonly prismaClient: PrismaClient) {}
 
     async saveOrder(order: Order): Promise<void> {
         await this.prismaClient.order.create({
@@ -29,7 +29,7 @@ export class PrismaOrderRepository implements OrderRepository {
         );
     }
     count(): Promise<number> {
-        throw new Error("Method not implemented.");
+        return this.prismaClient.order.count();
     }
 
     private entityToModel(order: Order) {
@@ -37,8 +37,8 @@ export class PrismaOrderRepository implements OrderRepository {
             id: randomUUID(),
             code: order.code,
             cpf: order.cpf.value,
-            coupon_code: order.coupon.code,
-            coupon_percentage: order.coupon.percentage,
+            coupon_code: order.coupon?.code ?? null,
+            coupon_percentage: order.coupon?.percentage ?? null,
             freight: order.freight,
             issue_date: new Date(),
             sequence: 1,

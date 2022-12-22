@@ -8,6 +8,7 @@ async function init() {
     QueueMicroservices.setup(app);
     Swagger.setup(app);
     const port = parseInt(process.env.PORT) || 3000;
+    app.enableShutdownHooks();
     await app.startAllMicroservices();
     await app.listen(port);
 }
