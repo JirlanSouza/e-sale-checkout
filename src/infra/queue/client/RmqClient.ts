@@ -53,7 +53,8 @@ export class RmqClient extends ClientRMQ {
 
         return new Promise<boolean>((resolve, reject) => {
             const callback = (err: Error) => {
-                if (!err) {
+                console.log("RETURN", err);
+                if (err) {
                     Logger.warn(
                         `The event : ${packet.pattern} publish was refused, ${err?.message}`,
                     );
